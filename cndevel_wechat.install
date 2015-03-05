@@ -1,0 +1,28 @@
+<?php
+/**
+ * Implements hook_install()
+ */
+function cndevel_wechat_install() {
+    watchdog("cnDevel WeChat Module", "Installing module and preparing all settings...");
+}
+
+/**
+ * Implements hook_uninstall()
+ */
+function cndevel_wechat_uninstall() {
+    watchdog("cnDevel WeChat Module", "Uninstalling module and cleaning up all settings...");
+}
+
+/**
+ * Implements hook_enable()
+ */
+function cndevel_wechat_enable() {
+    watchdog("cnDevel WeChat Module", "Enabling module and preparing all settings...");
+}
+
+/**
+ * Implements hook_disable()
+ */
+function cndevel_wechat_disable() {
+    watchdog("cnDevel WeChat Module", "Disabling module and cleaning up all settings...");
+}

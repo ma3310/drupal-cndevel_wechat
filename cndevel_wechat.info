@@ -1,0 +1,8 @@
+name=  "cnDevel WeChat"
+description = "Responds as a WeChat Callback Server."
+package = cnDevel
+configure = admin/config/wechat/settings
+version = "7.x-0.01"
+
+php = 5.3
+core = 7.x
