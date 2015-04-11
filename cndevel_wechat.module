@@ -1,0 +1,26 @@
+<?php
+/**
+ * @file
+ *
+ * 实现 WeChat Server 功能
+ *
+ */
+
+/**
+ * Implements hook_node_load()
+ */
+function cndevel_wechat_node_load($nodes, $types){
+  watchdog("cnDevel WeChat Module", "pre-handle before node load");
+}
+
+/**
+ * Implements hook_menu().
+ */
+function cndevel_wechat_menu() {
+
+}
+
+
+
+
+

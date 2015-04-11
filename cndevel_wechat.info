@@ -6,3 +6,10 @@ version = "7.x-0.01"
 
 php = 5.3
 core = 7.x
+
+dependencies[] = libraries
+
+files[] = "cndevel_wechat.install"
+files[] = "cndevel_wechat.module"
+files[] = "cndevel_wechat.admin.inc"
+
