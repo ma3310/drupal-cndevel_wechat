@@ -35,7 +35,7 @@ function cndevel_wechat_service_admin_settings() {
  * Form Validation
  * prevent invalid values are inputted.
  *
- * 此函数会被 drupal 自动调用
+ * 此函数会被 drupal 根据命名规则自动调用
  *
  * @param $form
  * @param $form_state
