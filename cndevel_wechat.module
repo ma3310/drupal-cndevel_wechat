@@ -54,6 +54,28 @@ function cndevel_wechat_menu() {
     return $items;
 }
 
+/**
+ * 输出日志确认用户的确已从 WeChat 登陆
+ *
+ * Implements hook_user_login().
+ */
+function cndevel_wechat_user_login(&$edit, $account){
+
+    watchdog("cnDevel WeChat Module", "user login from WeChat...");
+
+}
+
+/**
+ * 输出日志确认新内容已发布至 WeChat
+ *
+ * Implements hook_node_insert().
+ */
+function cndevel_wechat_node_insert($node){
+
+    watchdog("cnDevel WeChat Module", "New content has been released to WeChat...");
+
+}
+
 
 
 
