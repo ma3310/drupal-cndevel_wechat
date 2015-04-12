@@ -24,7 +24,7 @@ function cndevel_wechat_menu() {
     watchdog("cnDevel WeChat Module", "menu configurations have been read...");
 
     $items['admin/config/cndevel'] = array(
-        'title' => 'cnDevel Modules\' Settings',
+        'title' => 'cnDevel Modules',
         'description' => 'Adjust cnDevel modules\' options.',
         'position' => 'right',
         'weight' => -99,
@@ -36,18 +36,18 @@ function cndevel_wechat_menu() {
     $items['admin/config/cndevel/wechat-service'] = array(
         'title' => 'WeChat: Service Account',
         'description' => 'Set parameters of Service Account for WeChat module.',
-        'page callback' => 'drupal_get_form',  // 访问此配置时，此函数会被调用
-        'page arguments' => array('cndevel_wechat_admin_settings'),     // 此值会被当参数传入
-        'access arguments' => array('administer site configuration'),   // 用户需要此权限才能看到这个菜单
+        'page callback' => 'drupal_get_form',                                       // 访问此配置时，此函数会被调用
+        'page arguments' => array('cndevel_wechat_service_admin_settings'),         // 此值会被当参数传入
+        'access arguments' => array('administer site configuration'),               // 用户需要此权限才能看到这个菜单
         'type' => MENU_NORMAL_ITEM,
         'file' => 'cndevel_wechat.admin.inc',
     );
     $items['admin/config/cndevel/wechat-enterprise'] = array(
         'title' => 'WeChat: Enterprise Account',
         'description' => 'Set parameters of Enterprise Account for WeChat module.',
-        'page callback' => 'drupal_get_form',  // 访问此配置时，此函数会被调用
-        'page arguments' => array('cndevel_wechat_enterprise_admin_settings'),     // 此值会被当参数传入
-        'access arguments' => array('administer site configuration'),   // 用户需要此权限才能看到这个菜单
+        'page callback' => 'drupal_get_form',                                       // 访问此配置时，此函数会被调用
+        'page arguments' => array('cndevel_wechat_enterprise_admin_settings'),      // 此值会被当参数传入
+        'access arguments' => array('administer site configuration'),               // 用户需要此权限才能看到这个菜单
         'type' => MENU_NORMAL_ITEM,
         'file' => 'cndevel_wechat.admin.inc',
     );

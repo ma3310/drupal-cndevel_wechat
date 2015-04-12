@@ -6,97 +6,38 @@
  */
 
 /**
- * Form builder. Configure cnDevel WeChat module.
+ * Form builder.
+ * Configure Service Account related options.
  *
  * @ingroup forms
  * @see system_settings_form().
  */
-function cndevel_wechat_admin_settings() {
-// Get an array of node types with internal names as keys and
-// "friendly names" as values. E.g.,
-// array('page' => ’Basic Page, 'article' => 'Articles')
+function cndevel_wechat_service_admin_settings() {
 
-//    [article] => stdClass Object (
-//        [type] => article
-//        [name] => Article
-//        [base] => node_content
-//        [description] => Use articles for time-sensitive content like news, press releases
-//            or blog posts.
-//            [help] =>
-//        [has_title] => 1
-//        [title_label] => Title
-//        [has_body] => 1
-//        [body_label] => Body
-//        [custom] => 1
-//        [modified] => 1
-//        [locked] => 0
-//        [orig_type] => article
-//    )
-
-    $types = node_type_get_types();
-
-    foreach($types as $node_type) {
-        $options[$node_type->type] = $node_type->name;
-    }
-    $form['cndevel_wechat_node_types'] = array(
-        '#title' => t('Users may annotate these content types'),
-        '#description' => t('A text field will be available on these content types to make user-specific notes.'),
-        '#type' => 'checkboxes',
-        '#options' => $options,
-        '#default_value' => variable_get('cndevel_wechat_node_types', array('page')),
+    $form['cndevel_wechat_service_content_encryption_method'] = array(
+        '#title' => t('Contents Encryption Method'),
+        '#description' => t('Select an encryption method which will be used when changing contents between server with WeChat apps.'),
+        '#type' => 'radios',
+        '#options' => array(
+            t('None'),
+            t('AES Encoding'),
+        ),
+        '#default_value' => variable_get('cndevel_wechat_service_content_encryption_method', 0) // Default to None
     );
 
 
-    $form['#submit'][] = 'cndevel_wechat_admin_settings_submit';
+    $form['#submit'][] = 'cndevel_wechat_service_admin_settings_submit';
 
     return system_settings_form($form);
 }
 
 /**
- * Process annotation settings submission.
+ * Process WeChat - Service Account settings submission.
+ *
+ * 用户输入会自动被保存到 variables 表，通过 devel 模块可以访问和修改。
  */
-function cndevel_wechat_admin_settings_submit($form, $form_state) {
-// Loop through each of the content type checkboxes shown on the form.
-    foreach ($form_state['values']['annotate_node_types'] as $key => $value) {
-// If the check box for a content type is unchecked, look to see whether
-// this content type has the annotation field attached to it using the
-// field_info_instance function. If it does then we need to remove the
-// annotation field as the administrator has unchecked the box.
-        if (!$value) {
-            $instance = field_info_instance('node', 'annotation', $key);
-            if (!empty($instance)) {
-                field_delete_instance($instance);
-                watchdog("Annotation", 'Deleted annotation field from content type:
-%key', array('%key' => $key));
-            }
-        } else {
-// If the check box for a content type is checked, look to see whether
-// the field is associated with that content type. If not then add the
-// annotation field to the content type.
-            $instance = field_info_instance('node', 'annotation', $key);
-            if (empty($instance)) {
-                $instance = array(
-                    'field_name' => 'annotation',
-                    'entity_type' => 'node',
-                    'bundle' => $key,
-                    'label' => t('Annotation'),
-                    'widget_type' => 'text_textarea_with_summary',
-                    'settings' => array('display_summary' => TRUE),
-                    'display' => array(
-                        'default' => array(
-                            'type' => 'text_default',
-                        ),
-                        'teaser' => array(
-                            'type' => 'text_summary_or_trimmed',
-                        ),
-                    ),
-                );
-                $instance = field_create_instance($instance);
-                watchdog('Annotation', 'Added annotation field to content type: %key',
-                    array('%key' => $key));
-            }
-        }
-    } // End foreach loop.
+function cndevel_wechat_service_admin_settings_submit($form, $form_state) {
+
 }
 
 /**
@@ -127,6 +68,7 @@ Application has to be put in non-SystemAdmin group first, then use Secret of tha
     $form['WeChatEnterpriseAppID'] = array(
         '#title' => t('AppID'),
         '#type' => 'textfield',
+        '#size' => 10,
         '#default_value' => variable_get('WeChatEnterpriseAppID', ''),
     );
     $form['WeChatEnterpriseToken'] = array(
@@ -144,6 +86,13 @@ Application has to be put in non-SystemAdmin group first, then use Secret of tha
 
     return system_settings_form($form);
 }
+function cndevel_wechat_enterprise_admin_settings_validate ($form, $form_state){
+    watchdog("cnDevel WeChat Module", "cndevel_wechat_enterprise_admin_settings_validate()");
+    $value = $form_state['values']['WeChatEnterpriseAppID'];
+    if (!is_numeric($value) || $value < 0){
+        form_set_error('WeChatEnterpriseAppID', t('AppID should be a positive number.'));
+    }
+}
 
 
 function cndevel_wechat_enterprise_admin_settings_submit ($form, $form_state){
@@ -155,7 +104,7 @@ function cndevel_wechat_enterprise_admin_settings_submit ($form, $form_state){
     }
     if ( !empty($form_state['values']['WeChatEnterpriseAppID']) ){
         watchdog("cnDevel WeChat Module", "WeChatEnterpriseAppID: %value", array('%value'=>$form_state['values']['WeChatEnterpriseAppID']));
-        
+
     }
     if ( !empty($form_state['values']['WeChatEnterpriseToken']) ){
 
