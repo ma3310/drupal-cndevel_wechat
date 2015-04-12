@@ -32,6 +32,19 @@ function cndevel_wechat_service_admin_settings() {
 }
 
 /**
+ * Form Validation
+ * prevent invalid values are inputted.
+ *
+ * 此函数会被 drupal 自动调用
+ *
+ * @param $form
+ * @param $form_state
+ */
+function cndevel_wechat_service_admin_settings_validate ($form, $form_state){
+
+}
+
+/**
  * Process WeChat - Service Account settings submission.
  *
  * 用户输入会自动被保存到 variables 表，通过 devel 模块可以访问和修改。
@@ -86,8 +99,17 @@ Application has to be put in non-SystemAdmin group first, then use Secret of tha
 
     return system_settings_form($form);
 }
+
+/**
+ * prevent invalid values are inputted.
+ *
+ * @param $form
+ * @param $form_state
+ */
 function cndevel_wechat_enterprise_admin_settings_validate ($form, $form_state){
     watchdog("cnDevel WeChat Module", "cndevel_wechat_enterprise_admin_settings_validate()");
+
+    // AppID 应为正整数
     $value = $form_state['values']['WeChatEnterpriseAppID'];
     if (!is_numeric($value) || $value < 0){
         form_set_error('WeChatEnterpriseAppID', t('AppID should be a positive number.'));
