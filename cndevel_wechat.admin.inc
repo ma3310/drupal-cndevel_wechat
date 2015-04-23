@@ -70,6 +70,7 @@ function cndevel_wechat_enterprise_admin_settings() {
         '#type' => 'textfield',
         '#default_value' => variable_get('WeChatEnterpriseCorpID', ''), // 取不到变量时使用空字符串
                                                                         // checkboxes 值会是 array
+        '#required' => TRUE,
     );
     $form['WeChatEnterpriseSecret'] = array(
         '#title' => t('Secret'),
