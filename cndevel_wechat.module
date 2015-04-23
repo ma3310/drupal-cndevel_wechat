@@ -14,6 +14,8 @@ function cndevel_wechat_node_load($nodes, $types){
 }
 
 /**
+ * 申明菜单项及对应页面
+ *
  * Implements hook_menu().
  *
  * @see module_invoke_all()
@@ -78,7 +80,7 @@ function cndevel_wechat_node_insert($node){
 
 
 /**
- * 定义 Actions
+ * 申明 Actions
  *
  * Implements hook_action_info().
  */
@@ -95,8 +97,9 @@ function cndevel_wechat_action_info() {
 
 
 /**
- * 日志输出
+ * 定义 action 函数
  *
+ * 日志输出
  *
  */
 function cndevel_log_action(){
