@@ -77,6 +77,32 @@ function cndevel_wechat_node_insert($node){
 }
 
 
+/**
+ * 定义 Actions
+ *
+ * Implements hook_action_info().
+ */
+function cndevel_wechat_action_info() {
+    return array(
+        'cndevel_log_action' => array(
+            'type' => 'system',  // system, user, node, comment, taxonomy
+            'label' => t('log information for key steps.'),
+            'configurable' => FALSE,
+            'triggers' => array('node_view', 'cron', 'node_update', 'user_insert'),  // Set to 'any' to support all triggers.
+        ),
+    );
+}
+
+
+/**
+ * 日志输出
+ *
+ *
+ */
+function cndevel_log_action(){
+    watchdog("cnDevel Module", "Log action has been triggered...");
+}
+
 
 
 
