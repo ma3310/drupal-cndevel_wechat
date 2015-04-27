@@ -63,7 +63,27 @@ function cndevel_wechat_menu() {
  */
 function cndevel_wechat_user_login(&$edit, $account){
 
-    watchdog("cnDevel WeChat Module", "user login from WeChat...");
+    watchdog("cnDevel Module User Login: ", print_r($edit, true).'<br/><br/><br/>'.print_r($account, true));
+
+}
+
+
+/**
+ * Implements hook_user_insert().
+ *
+ * @param $edit
+ *   The array of form values submitted by the user.
+ * @param $account
+ *   The user object on which the operation is being performed.
+ * @param $category
+ *   The active category of user information being edited.
+ *
+ */
+function cndevel_wechat_user_insert(&$edit, $account, $category){
+
+    watchdog("cnDevel Module User Creation: ", print_r($edit, true).'<br/><br/><br/>'.print_r($account, true).'<br/><br/><br/>'.print_r($category, true));
+
+    $_SESSION['newly_registered_username'] = $edit['name'];
 
 }
 
@@ -85,6 +105,7 @@ function cndevel_wechat_node_insert($node){
  * Implements hook_action_info().
  */
 function cndevel_wechat_action_info() {
+
     return array(
         'cndevel_log_action' => array(
             'type' => 'system',  // system, user, node, comment, taxonomy
@@ -102,7 +123,7 @@ function cndevel_wechat_action_info() {
  * 日志输出
  *
  */
-function cndevel_log_action(){
+function cndevel_log_action($object, $context){
     watchdog("cnDevel Module", "Log action has been triggered...");
 }
 
