@@ -23,7 +23,7 @@ function cndevel_wechat_node_load($nodes, $types){
  */
 function cndevel_wechat_menu() {
 
-    watchdog("cnDevel WeChat Module", "menu configurations have been read...");
+    watchdog("cnDevel WeChat Module", __FUNCTION__.": menu configurations have been read...");
 
     $items['admin/config/cndevel'] = array(
         'title' => 'cnDevel Modules',
@@ -53,13 +53,36 @@ function cndevel_wechat_menu() {
         'type' => MENU_NORMAL_ITEM,
         'file' => 'cndevel_wechat.admin.inc',
     );
+
+    /**
+     * WeChat Callback definition.
+     *
+     */
+
+    $items['cndevel/wechat-enterprise'] = array (
+        'title' => 'cnDevel WeChat Enterprise Callback Server',
+        'page callback' => 'cndevel_wechat_enterprise_server',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+
     return $items;
+}
+
+
+function cndevel_wechat_enterprise_server(){
+    return t('hello');
 }
 
 /**
  * 输出日志确认用户的确已从 WeChat 登陆
  *
  * Implements hook_user_login().
+ *
+ * @param $edit
+ *   The array of form values submitted by the user.
+ * @param $account
+ *   The user object on which the operation is being performed.
  */
 function cndevel_wechat_user_login(&$edit, $account){
 
@@ -83,6 +106,7 @@ function cndevel_wechat_user_insert(&$edit, $account, $category){
 
     watchdog("cnDevel Module User Creation: ", print_r($edit, true).'<br/><br/><br/>'.print_r($account, true).'<br/><br/><br/>'.print_r($category, true));
 
+    // 在 Block 里，使用后会被销毁（unset）
     $_SESSION['newly_registered_username'] = $edit['name'];
 
 }
@@ -91,6 +115,9 @@ function cndevel_wechat_user_insert(&$edit, $account, $category){
  * 输出日志确认新内容已发布至 WeChat
  *
  * Implements hook_node_insert().
+ *
+ * @param $node
+ *   The node that is being created.
  */
 function cndevel_wechat_node_insert($node){
 
@@ -108,7 +135,7 @@ function cndevel_wechat_action_info() {
 
     return array(
         'cndevel_log_action' => array(
-            'type' => 'system',  // system, user, node, comment, taxonomy
+            'type' => 'node',  // system, user, node, comment, taxonomy
             'label' => t('log information for key steps.'),
             'configurable' => FALSE,
             'triggers' => array('node_view', 'cron', 'node_update', 'user_insert'),  // Set to 'any' to support all triggers.
@@ -122,9 +149,20 @@ function cndevel_wechat_action_info() {
  *
  * 日志输出
  *
+ * @param object $entity
+ *   An optional user object (could be a user, or an author if context is
+ *   node or comment)
+ * @param array $context
+ *   Array with parameters for this action: depends on the trigger. The context
+ *   is not used in this example.
+ *
  */
-function cndevel_log_action($object, $context){
-    watchdog("cnDevel Module", "Log action has been triggered...");
+function cndevel_log_action(&$entity, $context = array()){
+
+    watchdog("cnDevel Module Action Logger", var_export($entity, true).'<br/><br/><br/>'.var_export($context, true));
+
+
+
 }
 
 
