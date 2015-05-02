@@ -1,0 +1,184 @@
+<?php
+/**
+ * @file
+ *
+ * 实现 WeChat Server 功能
+ *
+ */
+
+/**
+ * Implements hook_node_load()
+ */
+function cndevel_wechat_node_load($nodes, $types){
+    watchdog("cnDevel WeChat Module", "pre-handle before node load");
+}
+
+/**
+ * 申明菜单项及对应页面
+ *
+ * Implements hook_menu().
+ *
+ * @see module_invoke_all()
+ * @link http://api.drupal.org/api/group/hooks/7
+ */
+function cndevel_wechat_menu() {
+
+    watchdog("cnDevel WeChat Module", __FUNCTION__.": menu configurations have been read...");
+
+    $items['admin/config/cndevel'] = array(
+        'title' => 'cnDevel Modules',
+        'description' => 'Adjust cnDevel modules\' options.',
+        'position' => 'right',
+        'weight' => -99,
+        'page callback' => 'system_admin_menu_block_page',
+        'access arguments' => array('administer site configuration'),
+        'file' => 'system.admin.inc',
+        'file path' => drupal_get_path('module', 'system'),
+    );
+    $items['admin/config/cndevel/wechat-service'] = array(
+        'title' => 'WeChat: Service Account',
+        'description' => 'Set parameters of Service Account for WeChat module.',
+        'page callback' => 'drupal_get_form',                                       // 访问此配置时，此函数会被调用
+        'page arguments' => array('cndevel_wechat_service_admin_settings'),         // 此值会被当参数传入
+        'access arguments' => array('administer site configuration'),               // 用户需要此权限才能看到这个菜单
+        'type' => MENU_NORMAL_ITEM,
+        'file' => 'cndevel_wechat.admin.inc',
+    );
+    $items['admin/config/cndevel/wechat-enterprise'] = array(
+        'title' => 'WeChat: Enterprise Account',
+        'description' => 'Set parameters of Enterprise Account for WeChat module.',
+        'page callback' => 'drupal_get_form',                                       // 访问此配置时，此函数会被调用
+        'page arguments' => array('cndevel_wechat_enterprise_admin_settings'),      // 此值会被当参数传入
+        'access arguments' => array('administer site configuration'),               // 用户需要此权限才能看到这个菜单
+        'type' => MENU_NORMAL_ITEM,
+        'file' => 'cndevel_wechat.admin.inc',
+    );
+
+    /**
+     * WeChat Callback definition.
+     *
+     */
+    $items['cndevel/wechat/enterprise'] = array (
+        'title' => 'cnDevel WeChat Enterprise Callback Server',     // Treated as page title
+        'page callback' => 'cndevel_wechat_enterprise_server',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+
+    return $items;
+}
+
+
+function cndevel_wechat_enterprise_server(){
+    return t('hello');
+}
+
+/**
+ * 输出日志确认用户的确已从 WeChat 登陆
+ *
+ * Implements hook_user_login().
+ *
+ * @param $edit
+ *   The array of form values submitted by the user.
+ * @param $account
+ *   The user object on which the operation is being performed.
+ */
+function cndevel_wechat_user_login(&$edit, $account){
+
+    watchdog("cnDevel Module User Login: ", print_r($edit, true).'<br/><br/><br/>'.print_r($account, true));
+
+}
+
+
+/**
+ * Implements hook_user_insert().
+ *
+ * @param $edit
+ *   The array of form values submitted by the user.
+ * @param $account
+ *   The user object on which the operation is being performed.
+ * @param $category
+ *   The active category of user information being edited.
+ *
+ */
+function cndevel_wechat_user_insert(&$edit, $account, $category){
+
+    watchdog("cnDevel Module User Creation: ", print_r($edit, true).'<br/><br/><br/>'.print_r($account, true).'<br/><br/><br/>'.print_r($category, true));
+
+    // 在 Block 里，使用后会被销毁（unset）
+    $_SESSION['newly_registered_username'] = $edit['name'];
+
+}
+
+/**
+ * 输出日志确认新内容已发布至 WeChat
+ *
+ * Implements hook_node_insert().
+ *
+ * @param $node
+ *   The node that is being created.
+ */
+function cndevel_wechat_node_insert($node){
+
+    watchdog("cnDevel WeChat Module", "New content has been released to WeChat...");
+
+}
+
+
+/**
+ * 申明 Actions
+ *
+ * Implements hook_action_info().
+ */
+function cndevel_wechat_action_info() {
+
+    return array(
+        'cndevel_log_action' => array(
+            'type' => 'node',  // system, user, node, comment, taxonomy
+            'label' => t('log information for key steps.'),
+            'configurable' => FALSE,
+            'triggers' => array('node_view', 'cron', 'node_update', 'user_insert'),  // Set to 'any' to support all triggers.
+        ),
+    );
+}
+
+/**
+ * Implementation of hook_drupal_alter(). Called by Drupal after
+ * hook_action_info() so modules may modify the action_info array.
+ *
+ * @param array $info
+ *
+ * The result of calling hook_action_info() on all modules.
+ */
+function cndevel_wechat_action_info_alter(&$info) {
+
+    if (!in_array("comment_insert", $info['cndevel_log_action']['triggers'])) {
+        $info['cndevel_log_action']['triggers'][] = 'comment_insert';
+    }
+}
+
+
+/**
+ * 定义 action 函数
+ *
+ * 日志输出
+ *
+ * @param object $entity
+ *   An optional user object (could be a user, or an author if context is
+ *   node or comment)
+ * @param array $context
+ *   Array with parameters for this action: depends on the trigger. The context
+ *   is not used in this example.
+ *
+ */
+function cndevel_log_action(&$entity, $context = array()){
+
+    watchdog("cnDevel Module Action Logger", var_export($entity, true).'<br/><br/><br/>'.var_export($context, true));
+
+
+
+}
+
+
+
+
