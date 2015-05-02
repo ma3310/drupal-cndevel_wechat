@@ -58,9 +58,8 @@ function cndevel_wechat_menu() {
      * WeChat Callback definition.
      *
      */
-
-    $items['cndevel/wechat-enterprise'] = array (
-        'title' => 'cnDevel WeChat Enterprise Callback Server',
+    $items['cndevel/wechat/enterprise'] = array (
+        'title' => 'cnDevel WeChat Enterprise Callback Server',     // Treated as page title
         'page callback' => 'cndevel_wechat_enterprise_server',
         'access callback' => TRUE,
         'type' => MENU_CALLBACK,
