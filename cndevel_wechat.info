@@ -12,4 +12,9 @@ dependencies[] = libraries
 files[] = "cndevel_wechat.install"
 files[] = "cndevel_wechat.module"
 files[] = "cndevel_wechat.admin.inc"
+files[] = "cndevel_wechat.enterprise.inc"
+
+
+
+
 
