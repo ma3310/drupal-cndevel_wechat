@@ -40,28 +40,28 @@ function cndevel_wechat_menu() {
         'description' => 'Adjust cnDevel modules\' options.',
         'position' => 'right',
         'weight' => -99,
-        'page callback' => 'system_admin_menu_block_page',
-        'access arguments' => array('administer site configuration'),
         'file' => 'system.admin.inc',
+        'page callback' => 'system_admin_menu_block_page',
         'file path' => drupal_get_path('module', 'system'),
+        'access arguments' => array('administer site configuration'),
     );
     $items['admin/config/cndevel/wechat-service'] = array(
         'title' => 'WeChat: Service Account',
         'description' => 'Set parameters of Service Account for WeChat module.',
+        'type' => MENU_NORMAL_ITEM,
+        'file' => 'cndevel_wechat.admin.inc',
         'page callback' => 'drupal_get_form',                                       // 访问此配置时，此函数会被调用
         'page arguments' => array('cndevel_wechat_service_admin_settings'),         // 此值会被当参数传入
         'access arguments' => array('administer site configuration'),               // 用户需要此权限才能看到这个菜单
-        'type' => MENU_NORMAL_ITEM,
-        'file' => 'cndevel_wechat.admin.inc',
     );
     $items['admin/config/cndevel/wechat-enterprise'] = array(
         'title' => 'WeChat: Enterprise Account',
         'description' => 'Set parameters of Enterprise Account for WeChat module.',
+        'type' => MENU_NORMAL_ITEM,
+        'file' => 'cndevel_wechat.admin.inc',
         'page callback' => 'drupal_get_form',                                       // 访问此配置时，此函数会被调用
         'page arguments' => array('cndevel_wechat_enterprise_admin_settings'),      // 此值会被当参数传入
         'access arguments' => array('administer site configuration'),               // 用户需要此权限才能看到这个菜单
-        'type' => MENU_NORMAL_ITEM,
-        'file' => 'cndevel_wechat.admin.inc',
     );
 
 
@@ -71,21 +71,13 @@ function cndevel_wechat_menu() {
      */
     $items['cndevel/wechat/enterprise'] = array (
         'title' => 'cnDevel WeChat Enterprise Callback Server',     // Treated as page title
+        'type' => MENU_CALLBACK,
+        'file' => 'cndevel_wechat.enterprise.inc',                  // 不指定时在 module 文件中寻找 page callback 函数
         'page callback' => 'cndevel_wechat_enterprise_server',
         'access callback' => TRUE,
-        'type' => MENU_CALLBACK,
     );
 
     return $items;
-}
-
-/**
- *
- * @return null|string
- */
-function cndevel_wechat_enterprise_server(){ // URL 中的 section 会出现在这里
-    
-    return t('hello');
 }
 
 /**
