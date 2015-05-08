@@ -64,14 +64,19 @@ function cndevel_wechat_menu() {
         'access arguments' => array('administer site configuration'),               // 用户需要此权限才能看到这个菜单
     );
 
-
-    /**
-     * WeChat Callback definition.
-     *
-     */
+    /* WeChat:Enterprise Callback definition */
     $items['cndevel/wechat/enterprise'] = array (
-        'title' => 'cnDevel WeChat Enterprise Callback Server',     // Treated as page title
+        'title' => 'cnDevel WeChat Enterprise Account Callback Server',     // Treated as page title
         'type' => MENU_CALLBACK,
+        'file' => 'cndevel_wechat.enterprise.inc',                  // 不指定时在 module 文件中寻找 page callback 函数
+        'page callback' => 'cndevel_wechat_enterprise_server',
+        'access callback' => TRUE,
+    );
+
+    /* WeChat:Service Callback definition */
+    $items['cndevel/wechat/service'] = array (
+        'title' => 'cnDevel WeChat Service Account Callback Server',     // Treated as page title
+        'type' => MENU_CALLBACK,        // 使用 MENU_NORMAL_ITEM 会添加菜单
         'file' => 'cndevel_wechat.enterprise.inc',                  // 不指定时在 module 文件中寻找 page callback 函数
         'page callback' => 'cndevel_wechat_enterprise_server',
         'access callback' => TRUE,
