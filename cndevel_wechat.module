@@ -7,6 +7,52 @@
  */
 
 /**
+ * Implements hook_init().
+ */
+function cndevel_wechat_init() {
+  // global $user;
+  // dsm($user);
+
+  module_invoke_all("hook_name");
+}
+
+/**
+ * Specify customized permissions
+ *
+ * Implements hook_permission().
+ */
+function cndevel_wechat_permission() {
+  return array(
+    "add public wechat service account" => array(
+      "title" => t("Add Public WeChat Service account"),
+      "description" => t("Users can add new public wechat service accounts with this permission."),
+    ),
+  );
+}
+
+/**
+ *
+ * Implements hook_node_view().
+ */
+function cndevel_wechat_node_view($node, $view_mode, $langcode) {
+  $node->content['custom'] = array(
+    '#type' => 'markup',
+    '#markup' => '<p>own contents</p>',
+    '#weight' => -10,
+  );
+
+  $node->content['list'] = array(
+    '#items' => array('green', 'yellow', 'red', 'white'),
+    '#theme' => 'item_list',
+    '#weight' => -9,
+  );
+
+  krumo($node);
+  kpr($view_mode);
+  kpr($langcode);
+}
+
+/**
  * Implements hook_node_load()
  *
  * @param $nodes
@@ -36,15 +82,16 @@ function cndevel_wechat_menu() {
     watchdog("cnDevel WeChat Module", __FUNCTION__.": menu configurations have been read...");
 
     $items['admin/config/cndevel'] = array(
-        'title' => 'cnDevel Modules',
+        'title'       => 'cnDevel Modules',
         'description' => 'Adjust cnDevel modules\' options.',
-        'position' => 'right',
-        'weight' => -99,
-        'file' => 'system.admin.inc',
-        'page callback' => 'system_admin_menu_block_page',
-        'file path' => drupal_get_path('module', 'system'),
+        'position'    => 'right',
+        'weight'      => -99,
+        'file'           => 'system.admin.inc',
+        'page callback'  => 'system_admin_menu_block_page',
+        'file path'      => drupal_get_path('module', 'system'),
         'access arguments' => array('administer site configuration'),
     );
+
     $items['admin/config/cndevel/wechat-service'] = array(
         'title' => 'WeChat: Service Account',
         'description' => 'Set parameters of Service Account for WeChat module.',
@@ -62,6 +109,25 @@ function cndevel_wechat_menu() {
         'page callback' => 'drupal_get_form',                                       // 访问此配置时，此函数会被调用
         'page arguments' => array('cndevel_wechat_enterprise_admin_settings'),      // 此值会被当参数传入
         'access arguments' => array('administer site configuration'),               // 用户需要此权限才能看到这个菜单
+    );
+
+
+    /* cnDevel */
+    $items['cndevel'] = array (
+        'title' => 'cnDevel',     // Treated as page title
+        'type' => MENU_NORMAL_ITEM,
+        'file' => 'cndevel_wechat.enterprise.inc',                  // 不指定时在 module 文件中寻找 page callback 函数
+        'page callback' => 'cndevel_wechat_enterprise_server',
+        'access callback' => TRUE,
+    );
+
+    /* cnDevel WeChat */
+    $items['cndevel/wechat'] = array (
+        'title' => 'cnDevel WeChat',     // Treated as page title
+        'type' => MENU_NORMAL_ITEM,
+        'file' => 'cndevel_wechat.enterprise.inc',                  // 不指定时在 module 文件中寻找 page callback 函数
+        'page callback' => 'cndevel_wechat_enterprise_server',
+        'access callback' => TRUE,
     );
 
     /* WeChat:Enterprise Callback definition */

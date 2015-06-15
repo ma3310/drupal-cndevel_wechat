@@ -14,7 +14,10 @@
  */
 function cndevel_wechat_enterprise_server(){ // URL 中的 section 会出现在这里
 
-    return t('hello');
+  drupal_send_headers();
+  echo t('hello');
+  drupal_exit();
+  
 }
 
 
